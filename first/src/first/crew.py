@@ -3,37 +3,73 @@ from crewai.project import CrewBase, agent, crew, task
 from langchain.agents import Tool
 from langchain.utilities import GoogleSerperAPIWrapper
 
-# Check our tools documentations for more information on how to use them
-# from .tools.custom_serper_news_tool import CustomSerperNewsTool
+from .tools.custom_serper_news_tool import CustomSerperNewsTool
 
+# Initialize tools
 search = GoogleSerperAPIWrapper()
-
-# Create and assign the search tool to an agent
 serper_tool = Tool(
     name="Intermediate Answer",
     func=search.run,
     description="Useful for search-based queries",
 )
+custom_news_tool = CustomSerperNewsTool()
 
 
 @CrewBase
 class FirstCrew:
     """First crew for managing research and reporting tasks."""
 
+    def __init__(self, use_custom_news=True):
+        """
+        Initialize the FirstCrew instance with the specified research tool.
+
+        This constructor allows for easy switching between two different research tools:
+        the CustomSerperNewsTool and the default GoogleSerperAPIWrapper tool.
+
+        Parameters:
+        -----------
+        use_custom_news : bool, optional (default=True)
+            A flag to determine which research tool to use.
+            If True, the CustomSerperNewsTool will be used.
+            If False, the default GoogleSerperAPIWrapper tool will be used.
+
+        Attributes:
+        -----------
+        research_tool : Tool
+            The selected research tool that will be used by the researcher agent.
+            This is either the custom_news_tool or the serper_tool, depending on
+            the value of use_custom_news.
+
+        Notes:
+        ------
+        - The custom_news_tool is an instance of CustomSerperNewsTool, which is
+          assumed to be a custom implementation for news-related searches.
+        - The serper_tool is an instance of the Tool class, initialized with
+          GoogleSerperAPIWrapper, which is a general-purpose search tool.
+        - This initialization allows for easy swapping between tools without
+          modifying the code of the researcher agent or other parts of the class.
+
+        Example:
+        --------
+        # To use the CustomSerperNewsTool (default behavior):
+        crew = FirstCrew()
+
+        # To use the default GoogleSerperAPIWrapper tool:
+        crew = FirstCrew(use_custom_news=False)
+        """
+        self.research_tool = custom_news_tool if use_custom_news else serper_tool
+
     @agent
     def researcher(self) -> Agent:
         """
-        Creates a researcher agent.
-
-        This agent is configured to perform research tasks using the assigned tools.
-        The tools include a search tool for retrieving information based on queries.
+        Creates a researcher agent with the specified tool.
 
         Returns:
             Agent: An instance of the Agent configured for research tasks.
         """
         return Agent(
             config=self.agents_config["researcher"],
-            tools=[serper_tool],
+            tools=[self.research_tool],
             verbose=True,
         )
 
