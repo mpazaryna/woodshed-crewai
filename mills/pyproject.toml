@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "first"
+name = "jba01"
 version = "0.1.0"
-description = "first using crewAI"
+description = "jba01 using crewAI"
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
@@ -10,11 +10,11 @@ crewai = { extras = ["tools"], version = ">=0.70.1,<1.0.0" }
 
 
 [tool.poetry.scripts]
-first = "first.main:run"
-run_crew = "first.main:run"
-train = "first.main:train"
-replay = "first.main:replay"
-test = "first.main:test"
+jba01 = "jba01.main:run"
+run_crew = "jba01.main:run"
+train = "jba01.main:train"
+replay = "jba01.main:replay"
+test = "jba01.main:test"
 
 [build-system]
 requires = ["poetry-core"]

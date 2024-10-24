@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 
-from first.crew import FirstCrew
+from jba.crew import JbaCrew
 
 # This main file is intended to be a way for your to run your
 # crew locally, so refrain from adding necessary logic into this file.
@@ -13,8 +13,8 @@ def run():
     """
     Run the crew.
     """
-    inputs = {"topic": "virtual travel with ai"}
-    FirstCrew().crew().kickoff(inputs=inputs)
+    inputs = {"topic": "Skytex Mills in Mexico"}
+    JbaCrew().crew().kickoff(inputs=inputs)
 
 
 def train():
@@ -23,7 +23,7 @@ def train():
     """
     inputs = {"topic": "AI LLMs"}
     try:
-        FirstCrew().crew().train(
+        JbaCrew().crew().train(
             n_iterations=int(sys.argv[1]), filename=sys.argv[2], inputs=inputs
         )
 
@@ -36,7 +36,7 @@ def replay():
     Replay the crew execution from a specific task.
     """
     try:
-        FirstCrew().crew().replay(task_id=sys.argv[1])
+        JbaCrew().crew().replay(task_id=sys.argv[1])
 
     except Exception as e:
         raise Exception(f"An error occurred while replaying the crew: {e}")
@@ -48,7 +48,7 @@ def test():
     """
     inputs = {"topic": "AI LLMs"}
     try:
-        FirstCrew().crew().test(
+        JbaCrew().crew().test(
             n_iterations=int(sys.argv[1]), openai_model_name=sys.argv[2], inputs=inputs
         )
 
